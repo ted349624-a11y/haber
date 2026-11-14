@@ -1,0 +1,42 @@
+# ===== Haber Trade Ajanı - Ayarlar =====
+# Repo herkese açık: buraya ANAHTAR/ŞİFRE yazmayın, onlar Vercel ortam değişkenlerinde.
+
+mode: dry_run            # dry_run = kâğıt üzerinde işlem | testnet | live (GERÇEK PARA!)
+# live_onay: true        # live mod için bu satırı açmanız gerekir
+
+# Takip edilecek X hesapları (@ olmadan). weight: o hesabın güvenilirlik çarpanı (0-1)
+accounts:
+  - username: WatcherGuru
+    weight: 1.0
+  - username: tier10k
+    weight: 1.0
+  - username: whale_alert
+    weight: 0.6
+
+poll_seconds: 60          # sadece run.py için; Vercel'de sıklığı dış zamanlayıcı belirler
+max_tweet_age_seconds: 300  # bundan eski haberlerle işlem açma (fiyat çoktan tepki vermiştir)
+
+analyzer:
+  model: claude-sonnet-5-5   # daha ucuz/hızlı: claude-haiku-5-5
+  min_confidence: 0.70       # Claude'un emin olma eşiği (0-1)
+  min_abs_score: 0.50        # duygu skoru eşiği: +0.5 üstü long, -0.5 altı short
+
+exchange:
+  id: bybit                  # ccxt borsa id: bybit, binance, okx, bitget ...
+  quote: USDT                # USDT perpetual vadeli kontratlar
+
+# İşlem yapılabilecek coinler. Haber bunlardan birini ilgilendirmiyorsa işlem açılmaz.
+allowed_assets: [BTC, ETH, SOL, XRP, BNB, DOGE]
+market_wide_asset: BTC       # haber genel piyasayı ilgilendiriyorsa (ör. FED faiz) hangi coin
+                             # boş bırakırsanız (null) genel haberlerde işlem açılmaz
+
+risk:
+  usdt_per_trade: 20         # işlem başına teminat (USDT)
+  leverage: 3
+  stop_loss_pct: 1.5         # % olarak, giriş fiyatına göre
+  take_profit_pct: 3.0
+  max_hold_minutes: 60       # haber etkisi söner; bu süre sonunda pozisyonu kapat
+  max_open_positions: 3
+  max_trades_per_day: 10
+  cooldown_minutes: 15       # aynı coinde iki işlem arası bekleme
+  reverse_on_opposite: false # açık long varken olumsuz haber gelirse ters çevir

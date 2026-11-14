@@ -1,0 +1,8 @@
+.env
+.env.*
+!.env.example
+store.json
+*.log
+__pycache__/
+.vercel/
+venv/

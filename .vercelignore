@@ -1,0 +1,4 @@
+deploy/
+venv/
+store.json
+*.log
